@@ -516,6 +516,24 @@ impl<E> Transactional<E> for Tree {
     }
 }
 
+impl<E> Transactional<E> for &[Tree] {
+    type View = Vec<TransactionalTree>;
+
+    fn make_overlay(&self) -> TransactionalTrees {
+        TransactionalTrees {
+            inner: self.iter().map(|t| TransactionalTree {
+                tree: t.clone(),
+                writes: Default::default(),
+                read_cache: Default::default(),
+            }).collect(),
+        }
+    }
+
+    fn view_overlay(overlay: &TransactionalTrees) -> Self::View {
+        overlay.inner.clone()
+    }
+}
+
 macro_rules! repeat_type {
     ($t:ty, ($($literals:literal),*)) => {
         repeat_type!(IMPL $t, (), ($($literals),*))
