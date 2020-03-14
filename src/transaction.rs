@@ -516,7 +516,7 @@ impl<E> Transactional<E> for Tree {
     }
 }
 
-impl<E> Transactional<E> for &[Tree] {
+impl<E> Transactional<E> for [Tree] {
     type View = Vec<TransactionalTree>;
 
     fn make_overlay(&self) -> TransactionalTrees {
